@@ -38,7 +38,7 @@ data class Maze(val rows: Int = 5, val cols: Int = 5, val empties: List<Coordina
     }
 
     fun getCell(coordinate: Coordinate): Cell {
-        return getCell(coordinate)
+        return getCell(coordinate.row, coordinate.col)
     }
 
     fun empty(row: Int, col: Int): Boolean {
@@ -46,16 +46,23 @@ data class Maze(val rows: Int = 5, val cols: Int = 5, val empties: List<Coordina
     }
 
     fun empty(coordinate: Coordinate): Boolean {
-        return empty(coordinate)
+        return empty(coordinate.row, coordinate.col)
     }
 
     fun solution(from: Coordinate, to: Coordinate): List<Coordinate> {
         var solution: MutableList<Coordinate> = linkedListOf()
-        var pos: Coordinate = from
-
+        var pos: Cell = getCell(from)
+        solution.add(from)
+        for (cel in pos.neighbor()){
+            if (to == cel.coordinate){
+                solution.add(cel.coordinate)
+            }
+        }
 
         return solution
     }
+
+
 
 
     val size: Pair<Int, Int> = Pair(rows, cols)
@@ -64,11 +71,32 @@ data class Maze(val rows: Int = 5, val cols: Int = 5, val empties: List<Coordina
 data class Coordinate(val row: Int, val col: Int)
 
 data class Cell(val maze: Maze, val row: Int, val col: Int, val state: CellState) {
+
+    val coordinate = Coordinate(row, col)
+
     fun blockString(): String {
         return when (state) {
             CellState.Empty -> " "
             CellState.Block -> "*"
         }
+    }
+
+    fun empty(): Boolean{
+        return  state == CellState.Empty
+    }
+
+    fun neighbor(): List<Cell> {
+        var neighbor = linkedListOf<Cell>();
+        for (i in -1..1) {
+            for (j in -1..1) {
+                val coord = Coordinate(row + i, col + j)
+                val cel = maze.getCell(coord)
+                if (cel != this && cel.empty()){
+                    neighbor.add(cel)
+                }
+            }
+        }
+        return neighbor
     }
 }
 
