@@ -1,4 +1,5 @@
 /**
+ * Test
  * Created by michele on 30/12/15.
  */
 package maze
@@ -6,6 +7,40 @@ package maze
 import org.junit.*
 import kotlin.test.*
 import utils.*
+
+fun cellsLine(from: Coordinate, to: Coordinate): List<Coordinate> {
+    if (from.row == to.row){
+        return horizontalCellLine(from.row, from.col, to.col)
+    }
+    if (from.col == to.col){
+        return verticalCellLine(from.row, from.col, to.col)
+    }
+    return listOf()
+}
+
+fun horizontalCellLine(row: Int, from: Int, to: Int): List<Coordinate> {
+    if (from == to){
+        return listOf(Coordinate(row, to))
+    }
+    var line = linkedListOf<Coordinate>()
+    for (col in from..to){
+        line.add(Coordinate(row, col))
+    }
+    line.add(Coordinate(row, to))
+    return line
+}
+
+fun verticalCellLine(col: Int, from: Int, to: Int): List<Coordinate> {
+    if (from == to){
+        return listOf(Coordinate(to, col))
+    }
+    var line = linkedListOf<Coordinate>()
+    for (row in from..to){
+        line.add(Coordinate(row, col))
+    }
+    line.add(Coordinate(to, col))
+    return line
+}
 
 class TestMaze {
 

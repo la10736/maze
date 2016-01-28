@@ -1,10 +1,12 @@
 /**
+ * Classe Labirinto
+ *
  * Created by michele on 30/12/15.
  */
 
 package maze
 
-private val NoEmpty: List<Coordinate> = emptyList()
+private var NoEmpty: List<Coordinate> = emptyList()
 
 data class Maze(val rows: Int = 5, val cols: Int = 5, val empties: List<Coordinate> = NoEmpty) {
     private val cells: Array<Array<Cell>> = Array(rows,
@@ -61,9 +63,6 @@ data class Maze(val rows: Int = 5, val cols: Int = 5, val empties: List<Coordina
 
         return solution
     }
-
-
-
 
     val size: Pair<Int, Int> = Pair(rows, cols)
 }

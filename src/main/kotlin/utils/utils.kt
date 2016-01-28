@@ -1,4 +1,6 @@
 /**
+ * Modulo di utility
+ *
  * Created by michele on 30/12/15.
  */
 
