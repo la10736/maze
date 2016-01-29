@@ -1,5 +1,5 @@
 /**
- * Modulo di utility
+ * Package di utilities
  *
  * Created by michele on 30/12/15.
  */

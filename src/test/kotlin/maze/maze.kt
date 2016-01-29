@@ -8,39 +8,6 @@ import org.junit.*
 import kotlin.test.*
 import utils.*
 
-fun cellsLine(from: Coordinate, to: Coordinate): List<Coordinate> {
-    if (from.row == to.row){
-        return horizontalCellLine(from.row, from.col, to.col)
-    }
-    if (from.col == to.col){
-        return verticalCellLine(from.row, from.col, to.col)
-    }
-    return listOf()
-}
-
-fun horizontalCellLine(row: Int, from: Int, to: Int): List<Coordinate> {
-    if (from == to){
-        return listOf(Coordinate(row, to))
-    }
-    var line = linkedListOf<Coordinate>()
-    for (col in from..to){
-        line.add(Coordinate(row, col))
-    }
-    line.add(Coordinate(row, to))
-    return line
-}
-
-fun verticalCellLine(col: Int, from: Int, to: Int): List<Coordinate> {
-    if (from == to){
-        return listOf(Coordinate(to, col))
-    }
-    var line = linkedListOf<Coordinate>()
-    for (row in from..to){
-        line.add(Coordinate(row, col))
-    }
-    line.add(Coordinate(to, col))
-    return line
-}
 
 class TestMaze {
 
@@ -102,15 +69,21 @@ class TestMaze {
     }
 
     @Test fun testSolutionTrivial0() {
-        var from = Coordinate(1, 1)
-        var to = Coordinate(2, 1)
-        var maze = Maze (empties = listOf(
-                from,
-                to
-        ))
+        checkMazeSolution(polyLine(Coordinate(0,0), Coordinate(0, 0)))
+        checkMazeSolution(polyLine(Coordinate(1,1), Coordinate(2, 1)))
+        checkMazeSolution(polyLine(Coordinate(4,1), Coordinate(4, 2)))
+    }
+
+    @Test fun testSolutionTrivial1() {
+        checkMazeSolution(polyLine(Coordinate(0,0), Coordinate(0, 3)))
+    }
+
+    fun checkMazeSolution(empties: List<Coordinate>, rows: Int=5, cols: Int=5) {
+        var from = empties.first()
+        var to = empties.last()
+        var maze = Maze (rows=rows, cols=cols, empties = polyLine(from, to))
         var solution = maze.solution(from, to)
         assertSolution(maze, from, to, solution)
-
     }
 
     fun assertSolution(maze: Maze, from: Coordinate, to: Coordinate, solution: List<Coordinate>) {
@@ -128,4 +101,3 @@ class TestMaze {
         return fullMaze(maze.rows, maze.cols)
     }
 }
-
