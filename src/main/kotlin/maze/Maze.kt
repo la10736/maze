@@ -204,13 +204,15 @@ enum class CellState {
  * @param coordinates spigoli della polilinea
  */
 fun polyLine(vararg coordinates: Coordinate): List<Coordinate> {
-    var result = linkedListOf<Coordinate>()
     if (coordinates.isEmpty()) {
-        return result
+        return Empty
     }
     var from = coordinates.first()
-    //    coordinates.flatMap { cellsLine(from, it) }
-    for (to in coordinates) {
+    if (coordinates.size == 1){
+        return linkedListOf(from)
+    }
+    var result = linkedListOf<Coordinate>()
+    for (to in coordinates.copyOfRange(1, coordinates.size)) {
         result.addAll(gridLine(from, to))
         from = to
     }
@@ -243,7 +245,6 @@ fun horizontalLine(row: Int, from: Int, to: Int): List<Coordinate> {
     for (col in from..to) {
         line.add(Coordinate(row, col))
     }
-    line.add(Coordinate(row, to))
     return line
 }
 

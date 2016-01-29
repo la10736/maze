@@ -76,6 +76,12 @@ class TestMaze {
 
     @Test fun testSolutionTrivial1() {
         checkMazeSolution(polyLine(Coordinate(0,0), Coordinate(0, 3)))
+        checkMazeSolution(polyLine(Coordinate(1,0), Coordinate(1, 4)))
+    }
+
+    @Test fun testPolyLine() {
+        assertEquals(listOf(Coordinate(0,0)), polyLine(Coordinate(0,0)))
+        assertEquals((0..3).map { Coordinate(0,it) }, polyLine(Coordinate(0,0), Coordinate(0, 3)))
     }
 
     fun checkMazeSolution(empties: List<Coordinate>, rows: Int=5, cols: Int=5) {
