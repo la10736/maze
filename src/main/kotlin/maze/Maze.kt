@@ -8,6 +8,7 @@
  */
 
 package maze
+import utils.*
 
 private val Empty: List<Coordinate> = emptyList()
 
@@ -27,8 +28,10 @@ data class Maze(val rows: Int = 5, val cols: Int = 5, val empties: List<Coordina
     )
 
     // Fino alla prossima release non funziona
-    //    private val cells: Array<Array<Cell>> = array2d<Cell>(rows, cols,
-    //        {row, col -> Cell(this, row, col, CellState.Block)})
+//    private val cells = array2d(rows, cols, {
+//        row, col ->
+//        Cell(this, row, col, CellState.Block)
+//    })
 
     init {
         for ((row, col) in empties) {
@@ -207,16 +210,12 @@ fun polyLine(vararg coordinates: Coordinate): List<Coordinate> {
     if (coordinates.isEmpty()) {
         return Empty
     }
-    var from = coordinates.first()
-    if (coordinates.size == 1){
-        return linkedListOf(from)
-    }
-    var result = linkedListOf<Coordinate>()
-    for (to in coordinates.copyOfRange(1, coordinates.size)) {
-        result.addAll(gridLine(from, to))
-        from = to
-    }
-    return result
+    return linkedListOf(coordinates.first()) +
+            coordinates.zip(coordinates.asList().subListSlice(1)).flatMap {
+                p ->
+                val (from, to) = p;
+                gridLine(from, to).subListSlice(1)
+            }
 }
 
 private fun gridLine(from: Coordinate, to: Coordinate): List<Coordinate> {
@@ -238,14 +237,7 @@ private fun gridLine(from: Coordinate, to: Coordinate): List<Coordinate> {
  * @param to colonna di arrivo (compreso)
  */
 fun horizontalLine(row: Int, from: Int, to: Int): List<Coordinate> {
-    if (from == to) {
-        return listOf(Coordinate(row, to))
-    }
-    var line = linkedListOf<Coordinate>()
-    for (col in from..to) {
-        line.add(Coordinate(row, col))
-    }
-    return line
+    return (from..to).map { Coordinate(row, it) }
 }
 
 /**
@@ -256,13 +248,5 @@ fun horizontalLine(row: Int, from: Int, to: Int): List<Coordinate> {
  * @param to riga di arrivo (compreso)
  */
 fun verticalLine(col: Int, from: Int, to: Int): List<Coordinate> {
-    if (from == to) {
-        return listOf(Coordinate(to, col))
-    }
-    var line = linkedListOf<Coordinate>()
-    for (row in from..to) {
-        line.add(Coordinate(row, col))
-    }
-    line.add(Coordinate(to, col))
-    return line
+    return (from..to).map { Coordinate(it, col) }
 }

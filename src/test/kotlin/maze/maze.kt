@@ -69,25 +69,35 @@ class TestMaze {
     }
 
     @Test fun testSolutionTrivial0() {
-        checkMazeSolution(polyLine(Coordinate(0,0), Coordinate(0, 0)))
-        checkMazeSolution(polyLine(Coordinate(1,1), Coordinate(2, 1)))
-        checkMazeSolution(polyLine(Coordinate(4,1), Coordinate(4, 2)))
+        checkMazeSolution(polyLine(Coordinate(0, 0), Coordinate(0, 0)))
+        checkMazeSolution(polyLine(Coordinate(1, 1), Coordinate(2, 1)))
+        checkMazeSolution(polyLine(Coordinate(4, 1), Coordinate(4, 2)))
     }
 
     @Test fun testSolutionTrivial1() {
-        checkMazeSolution(polyLine(Coordinate(0,0), Coordinate(0, 3)))
-        checkMazeSolution(polyLine(Coordinate(1,0), Coordinate(1, 4)))
+        checkMazeSolution(polyLine(Coordinate(0, 0), Coordinate(0, 3)))
+        checkMazeSolution(polyLine(Coordinate(1, 0), Coordinate(1, 4)))
     }
 
     @Test fun testPolyLine() {
-        assertEquals(listOf(Coordinate(0,0)), polyLine(Coordinate(0,0)))
-        assertEquals((0..3).map { Coordinate(0,it) }, polyLine(Coordinate(0,0), Coordinate(0, 3)))
+        assertEquals(listOf(Coordinate(0, 0)), polyLine(Coordinate(0, 0)))
+        assertEquals((0..3).map { Coordinate(0, it) }, polyLine(Coordinate(0, 0), Coordinate(0, 3)))
+        assertEquals((1..2).map { Coordinate(1, it) } + (2..5).map { Coordinate(it, 2) },
+                polyLine(Coordinate(1, 1), Coordinate(1, 2), Coordinate(5, 2)))
+        assertFailsWith(IllegalArgumentException::class) {
+            polyLine(Coordinate(1, 1), Coordinate(1, 2), Coordinate(5, 3))
+        }
+        assertEquals((1..2).map { Coordinate(1, it) } +
+                (2..5).map { Coordinate(it, 2) } +
+                (3..5).map { Coordinate(5, it) },
+                polyLine(Coordinate(1, 1), Coordinate(1, 2), Coordinate(5, 2),
+                        Coordinate(5, 5)))
     }
 
-    fun checkMazeSolution(empties: List<Coordinate>, rows: Int=5, cols: Int=5) {
+    fun checkMazeSolution(empties: List<Coordinate>, rows: Int = 5, cols: Int = 5) {
         var from = empties.first()
         var to = empties.last()
-        var maze = Maze (rows=rows, cols=cols, empties = polyLine(from, to))
+        var maze = Maze (rows = rows, cols = cols, empties = polyLine(from, to))
         var solution = maze.solution(from, to)
         assertSolution(maze, from, to, solution)
     }
