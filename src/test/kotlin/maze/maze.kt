@@ -79,7 +79,11 @@ class TestMaze {
         checkMazeSolution(polyLine(Coordinate(1, 0), Coordinate(1, 4)))
     }
 
-    @Test fun testPolyLine() {
+    @Test fun testSolutionNoDiagonal() {
+        checkMazeSolution(polyLine(Coordinate(0, 0), Coordinate(0, 1), Coordinate(1, 1)))
+    }
+
+        @Test fun testPolyLine() {
         assertEquals(listOf(Coordinate(0, 0)), polyLine(Coordinate(0, 0)))
         assertEquals((0..3).map { Coordinate(0, it) }, polyLine(Coordinate(0, 0), Coordinate(0, 3)))
         assertEquals((1..2).map { Coordinate(1, it) } + (2..5).map { Coordinate(it, 2) },
@@ -94,10 +98,22 @@ class TestMaze {
                         Coordinate(5, 5)))
     }
 
+    @Test fun testBuildFromPicture(){
+        assertEquals(fullMaze(3,5), maze(fullMaze(3,5).dropLast(1)).dump())
+        var picture = """
+   **
+** **
+**  *
+*** *
+*** *
+""".substring(1)
+        assertEquals(picture, maze(picture.dropLast(1)).dump())
+    }
+
     fun checkMazeSolution(empties: List<Coordinate>, rows: Int = 5, cols: Int = 5) {
         var from = empties.first()
         var to = empties.last()
-        var maze = Maze (rows = rows, cols = cols, empties = polyLine(from, to))
+        var maze = Maze (rows = rows, cols = cols, empties = empties)
         var solution = maze.solution(from, to)
         assertSolution(maze, from, to, solution)
     }

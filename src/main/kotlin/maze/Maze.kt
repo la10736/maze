@@ -210,12 +210,17 @@ fun polyLine(vararg coordinates: Coordinate): List<Coordinate> {
     if (coordinates.isEmpty()) {
         return Empty
     }
+    var coupoles = couplesCoordinate(coordinates.asList())
     return linkedListOf(coordinates.first()) +
-            coordinates.zip(coordinates.asList().subListSlice(1)).flatMap {
+            coupoles.flatMap {
                 p ->
                 val (from, to) = p;
                 gridLine(from, to).subListSlice(1)
             }
+}
+
+private fun couplesCoordinate(coordinates : List<Coordinate>): List<Pair<Coordinate, Coordinate>> {
+    return coordinates.subListSlice(toIndex = -1).zip(coordinates.subListSlice(1))
 }
 
 private fun gridLine(from: Coordinate, to: Coordinate): List<Coordinate> {
@@ -249,4 +254,26 @@ fun horizontalLine(row: Int, from: Int, to: Int): List<Coordinate> {
  */
 fun verticalLine(col: Int, from: Int, to: Int): List<Coordinate> {
     return (from..to).map { Coordinate(it, col) }
+}
+
+/**
+ * Crea un labirinto da un disegno
+ *
+ * @param picture disegno del labirinto
+ */
+
+fun maze(picture:String): Maze {
+    var rowDesc = picture.lines()
+    var rows = rowDesc.size
+    var cols = rowDesc.map{ it.length }.max() ?: throw IllegalArgumentException("Almeno una riga")
+    var empties = linkedListOf<Coordinate>()
+    rowDesc.forEachIndexed {
+        r, row ->
+            row.forEachIndexed { c, chr ->
+                if (chr==' '){
+                    empties.add(Coordinate(r, c))
+                }
+            }
+        }
+    return Maze(rows, cols, empties)
 }
